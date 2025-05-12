@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FREE Ebook Collection for South African Readers</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 0 15px;
+            margin: 0 auto;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 5px solid #4b2a80;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+        
+        .subheadline {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 30px 0;
+            background-color: white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .ebook-cover {
+            width: 200px;
+            height: auto;
+            border: 5px solid #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 20px auto;
+            position: relative;
+        }
+        
+        .free-badge {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background-color: #ff5722;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 14px;
+            transform: rotate(15deg);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: rotate(15deg) scale(1); }
+            50% { transform: rotate(15deg) scale(1.1); }
+            100% { transform: rotate(15deg) scale(1); }
+        }
+        
+        /* FOMO Section */
+        .fomo-section {
+            background-color: #fff8e1;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #ffc107;
+            text-align: center;
+        }
+        
+        .fomo-item {
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .counter {
+            color: #e53935;
+            font-weight: 800;
+            font-size: 20px;
+        }
+        
+        .countdown {
+            font-size: 18px;
+            color: #d81b60;
+        }
+        
+        /* Benefits Section */
+        .benefits {
+            background-color: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .benefits h2 {
+            color: #6e48aa;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .benefits ul {
+            list-style-type: none;
+        }
+        
+        .benefits li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .benefits li:before {
+            content: "✓";
+            color: #4caf50;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        /* CTA Button */
+        .cta-button {
+            display: block;
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin: 25px auto;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            text-decoration: none;
+            max-width: 350px;
+            box-shadow: 0 5px 15px rgba(255,75,43,0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255,75,43,0.6);
+        }
+        
+        .small-text {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: -15px;
+            margin-bottom: 20px;
+        }
+        
+        /* Testimonial */
+        .testimonial {
+            background-color: #e3f2fd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .testimonial:before {
+            content: """;
+            font-size: 60px;
+            color: #bbdefb;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            line-height: 1;
+        }
+        
+        .testimonial-content {
+            padding-left: 30px;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        
+        .stars {
+            color: #ffc107;
+            letter-spacing: 3px;
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            background-color: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .how-it-works h2 {
+            color: #6e48aa;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            background-color: #6e48aa;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin: 20px 0;
+            height: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            width: 75%;
+            border-radius: 10px;
+            animation: progress-animation 2s ease-in-out;
+        }
+        
+        @keyframes progress-animation {
+            0% { width: 0%; }
+            100% { width: 75%; }
+        }
+        
+        .progress-text {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            margin-top: 30px;
+        }
+        
+        /* Responsive Adjustments */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 750px;
+            }
+            
+            h1 {
+                font-size: 36px;
+            }
+            
+            .subheadline {
+                font-size: 22px;
+            }
+            
+            .steps {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .step {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                flex: 1;
+            }
+            
+            .step-number {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Unlock Your FREE Ebook Collection NOW!</h1>
+            <p class="subheadline">Limited Time Offer - Only for South African Readers</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <section class="hero">
+            <div class="ebook-cover">
+                <img src="https://via.placeholder.com/200x300/6e48aa/ffffff?text=Ebook+Collection" alt="Premium Ebook Collection" style="width:100%;">
+                <div class="free-badge">FREE</div>
+            </div>
+            
+            <h2>Join thousands of readers enjoying these life-changing ebooks - yours FREE today when you complete one quick request!</h2>
+        </section>
+        
+        <section class="fomo-section">
+            <div class="fomo-item">🔥 <span class="counter">Only 37 copies</span> remaining at this FREE price!</div>
+            <div class="fomo-item">⏰ Offer expires in: <span class="countdown">12:34:56</span></div>
+            <div class="fomo-item">👥 <span class="counter">1,243 South Africans</span> downloaded this collection in the last 24 hours!</div>
+        </section>
+        
+        <section class="benefits">
+            <h2>What You'll Get:</h2>
+            <ul>
+                <li>Instant access to 5 premium ebooks (worth R499)</li>
+                <li>Curated collection for personal growth & entertainment</li>
+                <li>Compatible with all devices - read anywhere</li>
+                <li>100% FREE for a limited time</li>
+            </ul>
+        </section>
+        
+        <a href="https://appinstallcheck.com/sl/4lvlr" class="cta-button">GET MY FREE EBOOKS NOW!</a>
+        <p class="small-text">By clicking, you agree to complete one quick sponsor offer</p>
+        
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+        <p class="progress-text">Hurry! 75% of free copies already claimed!</p>
+        
+        <section class="testimonial">
+            <div class="testimonial-content">
+                <p>"I couldn't believe these were actually free! The productivity guide alone changed how I work. Best download ever!"</p>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Thando M." class="author-avatar">
+                    <div>
+                        <div>Thando M., Cape Town</div>
+                        <div class="stars">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="how-it-works">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div>Click the button below</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div>Complete one quick request (takes &lt;2 minutes)</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div>Get instant access to your ebook collection</div>
+                </div>
+            </div>
+        </section>
+        
+        <section style="text-align: center; margin: 30px 0;">
+            <h2 style="color: #6e48aa; margin-bottom: 15px;">Don't Miss Out - Claim Your Free Ebooks Before They're Gone!</h2>
+            <a href="https://appinstallcheck.com/sl/4lvlr" class="cta-button">GET MY FREE EBOOKS NOW!</a>
+        </section>
+    </div>
+    
+    <footer>
+        <p>This offer is only available for South African residents on mobile devices. By proceeding, you agree to our Terms and Privacy Policy.</p>
+    </footer>
+    
+    <script>
+        // Simple countdown timer
+        function updateCountdown() {
+            let hours = 12;
+            let minutes = 34;
+            let seconds = 56;
+            
+            function tick() {
+                seconds--;
+                if (seconds < 0) {
+                    seconds = 59;
+                    minutes--;
+                    if (minutes < 0) {
+                        minutes = 59;
+                        hours--;
+                    }
+                }
+                
+                // Display the updated countdown
+                document.querySelector('.countdown').textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Stop when time runs out
+                if (hours <= 0 && minutes <= 0 && seconds <= 0) {
+                    clearInterval(timer);
+                }
+            }
+            
+            // Update every second
+            let timer = setInterval(tick, 1000);
+        }
+        
+        // Random counter animation
+        function animateCounter() {
+            let start = 37;
+            let end = Math.floor(Math.random() * 10) + 1; // Random number between 1-10
+            let duration = 3000; // 3 seconds
+            let range = start - end;
+            let current = start;
+            let increment = end > start ? 1 : -1;
+            let stepTime = Math.abs(Math.floor(duration / range));
+            
+            let timer = setInterval(function() {
+                current += increment;
+                document.querySelector('.counter').textContent = `Only ${current} copies`;
+                if (current == end) {
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        }
+        
+        // Initialize when page loads
+        window.onload = function() {
+            updateCountdown();
+            animateCounter();
+            
+            // Trigger counter animation every 30 seconds
+            setInterval(animateCounter, 30000);
+        };
+    </script>
+</body>
+</html>
