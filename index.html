@@ -3,74 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Binance-Style Crypto Red Packet</title>
+    <title>🎁 Binance Red Packet Reward</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
+        :root {
+            --binance-red: #F0B90B;
+            --binance-dark: #1E2026;
+            --binance-lightred: #F8D12F;
+        }
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f0e6;
-            text-align: center;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f5f5, #e9e9e9);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 420px;
             padding: 20px;
         }
         .red-packet {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            border-radius: 16px;
+            padding: 30px 25px;
+            box-shadow: 0 12px 30px rgba(233, 30, 99, 0.25);
             color: white;
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 400px;
-            margin: 50px auto;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            animation: float 3s ease-in-out infinite;
+        }
+        .red-packet::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            z-index: -1;
         }
         .binance-logo {
-            width: 120px;
-            margin-bottom: 20px;
+            width: 100px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin: 10px 0 20px;
+        }
+        .code-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
         }
         .code {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 18px;
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
             font-weight: bold;
-            margin: 20px 0;
+            letter-spacing: 1px;
             word-break: break-all;
+            color: #FFF;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
         .claim-btn {
-            background: #f39c12;
-            color: white;
+            background: linear-gradient(to right, var(--binance-red), var(--binance-lightred));
+            color: var(--binance-dark);
             border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
+            padding: 14px 30px;
+            border-radius: 50px;
             font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(240, 185, 11, 0.4);
+            width: 100%;
+            margin-top: 10px;
         }
         .claim-btn:hover {
-            background: #e67e22;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(240, 185, 11, 0.6);
+        }
+        .claim-btn:active {
+            transform: translateY(0);
+        }
+        .progress-container {
+            width: 100%;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            margin: 25px 0 15px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 6px;
+            background: linear-gradient(to right, #f8d12f, #f0b90b);
+            width: 100%;
+            border-radius: 10px;
+            animation: progress 2s ease-in-out infinite;
+        }
+        .instructions {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 20px;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes progress {
+            0% { width: 0%; }
+            50% { width: 100%; }
+            100% { width: 0%; }
+        }
+        .gold-particle {
+            position: absolute;
+            background: var(--binance-red);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
         }
     </style>
 </head>
 <body>
-    <div class="red-packet">
-        <img src="https://bin.bnbstatic.com/static/images/common/logo-bnb.svg" alt="Binance Logo" class="binance-logo">
-        <h1>Congratulations! 🎉</h1>
-        <p>You’ve unlocked a Binance-style crypto red packet!</p>
-        
-        <div class="code" id="cryptoCode">Loading...</div>
-        
-        <p>Redeem your crypto reward by copying the code above.</p>
-        <button class="claim-btn" onclick="copyCode()">Copy Code</button>
+    <div class="container">
+        <div class="red-packet animate__animated animate__fadeIn">
+            <img src="https://bin.bnbstatic.com/static/images/common/favicon.ico" alt="Binance Logo" class="binance-logo">
+            <h1>CONGRATULATIONS!</h1>
+            <p class="subtitle">You've received a Binance Red Packet Reward</p>
+            
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+            
+            <div class="code-container">
+                <div class="code" id="cryptoCode">Loading...</div>
+            </div>
+            
+            <button class="claim-btn" id="claimBtn" onclick="claimReward()">
+                🎁 Copy & Claim Reward
+            </button>
+            
+            <p class="instructions">
+                Redeem this code in your Binance account to claim your crypto reward.
+            </p>
+        </div>
     </div>
 
     <script>
-        // Extract the code from URL (e.g., ?code=O5EXD2UR)
+        // Dynamic code from URL
         const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code') || "O5EXD2UR"; // Default code if none provided
-        
+        let code = urlParams.get('code') || "O5EXD2UR"; // Default code
         document.getElementById("cryptoCode").textContent = code;
-        
-        function copyCode() {
-            navigator.clipboard.writeText(code);
-            alert("Code copied: " + code);
+
+        // Create floating gold particles
+        function createParticles() {
+            const packet = document.querySelector('.red-packet');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('gold-particle');
+                
+                // Random properties
+                const size = Math.random() * 6 + 2;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 10 + 5;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
+                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+                
+                packet.appendChild(particle);
+            }
         }
+
+        // Confetti effect + copy code
+        function claimReward() {
+            // Copy to clipboard
+            navigator.clipboard.writeText(code);
+            
+            // Confetti explosion
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#FFD700', '#F0B90B', '#FFFFFF']
+            });
+            
+            // Button feedback
+            const btn = document.getElementById("claimBtn");
+            btn.textContent = "✅ Code Copied!";
+            btn.style.background = "linear-gradient(to right, #4CAF50, #2E7D32)";
+            
+            setTimeout(() => {
+                btn.textContent = "🎁 Copy & Claim Reward";
+                btn.style.background = "linear-gradient(to right, var(--binance-red), var(--binance-lightred))";
+            }, 2000);
+        }
+
+        // Initialize
+        window.onload = function() {
+            createParticles();
+        };
     </script>
 </body>
 </html>
