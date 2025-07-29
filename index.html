@@ -140,6 +140,70 @@
             pointer-events: none;
             z-index: -1;
         }
+        /* Content Locker Overlay */
+        .locker-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .locker-content {
+            background: #1E2026;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+        }
+        .locker-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--binance-red);
+        }
+        .locker-steps {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        .locker-step {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .step-number {
+            background: var(--binance-red);
+            color: var(--binance-dark);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        .locker-btn {
+            background: var(--binance-red);
+            color: var(--binance-dark);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .locker-btn:hover {
+            background: var(--binance-lightred);
+        }
     </style>
 </head>
 <body>
@@ -157,13 +221,35 @@
                 <div class="code" id="cryptoCode">Loading...</div>
             </div>
             
-            <button class="claim-btn" id="claimBtn" onclick="claimReward()">
+            <button class="claim-btn" id="claimBtn" onclick="showContentLocker()">
                 🎁 Copy & Claim Reward
             </button>
             
             <p class="instructions">
                 Redeem this code in your Binance account to claim your crypto reward.
             </p>
+        </div>
+    </div>
+
+    <!-- Content Locker Overlay -->
+    <div class="locker-overlay" id="lockerOverlay">
+        <div class="locker-content">
+            <h2 class="locker-title">Complete to Claim Your Reward</h2>
+            <div class="locker-steps">
+                <div class="locker-step">
+                    <div class="step-number">1</div>
+                    <div>Complete the verification step</div>
+                </div>
+                <div class="locker-step">
+                    <div class="step-number">2</div>
+                    <div>Your reward will be unlocked</div>
+                </div>
+                <div class="locker-step">
+                    <div class="step-number">3</div>
+                    <div>Copy your Binance Red Packet code</div>
+                </div>
+            </div>
+            <button class="locker-btn" onclick="redirectToLocker()">Continue to Verification</button>
         </div>
     </div>
 
@@ -198,28 +284,14 @@
             }
         }
 
-        // Confetti effect + copy code
-        function claimReward() {
-            // Copy to clipboard
-            navigator.clipboard.writeText(code);
-            
-            // Confetti explosion
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#FFD700', '#F0B90B', '#FFFFFF']
-            });
-            
-            // Button feedback
-            const btn = document.getElementById("claimBtn");
-            btn.textContent = "✅ Code Copied!";
-            btn.style.background = "linear-gradient(to right, #4CAF50, #2E7D32)";
-            
-            setTimeout(() => {
-                btn.textContent = "🎁 Copy & Claim Reward";
-                btn.style.background = "linear-gradient(to right, var(--binance-red), var(--binance-lightred))";
-            }, 2000);
+        // Show content locker overlay
+        function showContentLocker() {
+            document.getElementById("lockerOverlay").style.display = "flex";
+        }
+
+        // Redirect to content locker
+        function redirectToLocker() {
+            window.location.href = "https://appslocked.com/cl/i/dv6k2k";
         }
 
         // Initialize
