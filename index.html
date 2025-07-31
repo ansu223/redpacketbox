@@ -3,301 +3,1182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎁 Binance Red Packet Reward</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <title>Double Game App</title>
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js?57"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --binance-red: #F0B90B;
-            --binance-dark: #1E2026;
-            --binance-lightred: #F8D12F;
+            --primary-color: #2dd60c;
+            --secondary-color: #1a73e8;
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #ffffff;
+            --text-secondary: #b0b0b0;
+            --success-color: #4CAF50;
+            --warning-color: #FFA500;
+            --error-color: #f44336;
+            --wheel-border: #ffffff;
+            --fish-pond: #1c6e8c;
+            --navbar-bg: #333333;
+            --button-bg: #444444;
+            --button-hover: #555555;
+            --telegram-color: #0088cc;
+            --ads-color: #FF5722;
         }
+
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #f5f5f5, #e9e9e9);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            padding-bottom: 70px;
             min-height: 100vh;
-            overflow-x: hidden;
         }
-        .container {
-            position: relative;
+
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            background-color: var(--navbar-bg);
+            padding: 12px;
+            position: fixed;
+            bottom: 0;
             width: 100%;
-            max-width: 420px;
-            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
         }
-        .red-packet {
-            background: linear-gradient(145deg, #e74c3c, #c0392b);
+
+        .navbar button {
+            background-color: var(--button-bg);
+            color: var(--text-color);
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .navbar button:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        .navbar button.active {
+            background-color: var(--primary-color);
+            color: #000;
+        }
+
+        .game-container {
+            margin: 20px auto;
+            padding: 25px;
+            max-width: 420px;
+            background-color: var(--card-bg);
             border-radius: 16px;
-            padding: 30px 25px;
-            box-shadow: 0 12px 30px rgba(233, 30, 99, 0.25);
-            color: white;
-            text-align: center;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            color: var(--text-color);
+            transition: transform 0.3s ease;
+        }
+
+        .game-container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .wheel-container {
+            position: relative;
+            margin: 25px auto;
+            width: 250px;
+            height: 250px;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 6px solid var(--wheel-border);
+            position: relative;
+            background: conic-gradient(
+                #ff0000 0deg 60deg,
+                #33cc33 60deg 120deg,
+                #ffcc00 120deg 180deg,
+                #00ccff 180deg 240deg,
+                #ff6600 240deg 300deg,
+                #cc00ff 300deg 360deg
+            );
+            transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+        }
+
+        .wheel span {
+            position: absolute;
+            font-size: 14px;
+            font-weight: bold;
+            transform-origin: center;
+            transform: translate(-50%, -50%) rotate(var(--rotate));
+            top: var(--top);
+            left: var(--left);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .wheel .usdt { --rotate: -30deg; --top: 15%; --left: 75%; }
+        .wheel .bttc { --rotate: 30deg; --top: 15%; --left: 25%; }
+        .wheel .lunc { --rotate: 90deg; --top: 50%; --left: 10%; }
+        .wheel .pepe { --rotate: 150deg; --top: 85%; --left: 25%; }
+        .wheel .bnb { --rotate: 210deg; --top: 85%; --left: 75%; }
+        .wheel .ltc { --rotate: 270deg; --top: 50%; --left: 90%; }
+
+        .arrow {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 24px solid var(--wheel-border);
+            z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .fish-pond {
+            width: 100%;
+            height: 220px;
+            background-color: var(--fish-pond);
+            border-radius: 12px;
             position: relative;
             overflow: hidden;
-            z-index: 1;
-            animation: float 3s ease-in-out infinite;
-        }
-        .red-packet::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            z-index: -1;
-        }
-        .binance-logo {
-            width: 100px;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-        }
-        h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .subtitle {
-            font-size: 14px;
-            opacity: 0.9;
-            margin: 10px 0 20px;
-        }
-        .code-container {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(5px);
-            border-radius: 10px;
-            padding: 15px;
             margin: 20px 0;
-            border: 1px dashed rgba(255, 255, 255, 0.3);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
         }
-        .code {
-            font-family: 'Courier New', monospace;
-            font-size: 20px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            word-break: break-all;
-            color: #FFF;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+
+        .fish {
+            position: absolute;
+            font-size: 32px;
+            cursor: pointer;
+            animation: swim 5s linear infinite;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.2s ease;
         }
-        .claim-btn {
-            background: linear-gradient(to right, var(--binance-red), var(--binance-lightred));
-            color: var(--binance-dark);
+
+        .fish:hover {
+            transform: translateY(-50%) scale(1.2);
+        }
+
+        .fish.winning-fish {
+            color: gold;
+            text-shadow: 0 0 15px gold, 0 0 30px gold;
+            animation: swim 5s linear infinite, glow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes swim {
+            0% { left: -50px; }
+            100% { left: 100%; }
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px gold); }
+            to { filter: drop-shadow(0 0 15px gold); }
+        }
+
+        .spin-button, .cast-button {
+            background-color: var(--primary-color);
+            color: #000;
             border: none;
-            padding: 14px 30px;
-            border-radius: 50px;
+            padding: 12px 24px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(240, 185, 11, 0.4);
-            width: 100%;
-            margin-top: 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        .claim-btn:hover {
+
+        .spin-button:hover, .cast-button:hover {
+            background-color: #26c20a;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(240, 185, 11, 0.6);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
-        .claim-btn:active {
-            transform: translateY(0);
+
+        .spin-button:disabled, .cast-button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
-        .progress-container {
-            width: 100%;
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
-            margin: 25px 0 15px;
-            overflow: hidden;
+
+        #spin-result, #catch-result {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text-color);
+            min-height: 24px;
         }
-        .progress-bar {
-            height: 6px;
-            background: linear-gradient(to right, #f8d12f, #f0b90b);
-            width: 100%;
-            border-radius: 10px;
-            animation: progress 2s ease-in-out infinite;
-        }
-        .instructions {
-            font-size: 12px;
-            opacity: 0.7;
-            margin-top: 20px;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        @keyframes progress {
-            0% { width: 0%; }
-            50% { width: 100%; }
-            100% { width: 0%; }
-        }
-        .gold-particle {
-            position: absolute;
-            background: var(--binance-red);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: -1;
-        }
-        /* Content Locker Overlay */
-        .locker-overlay {
+
+        #copy-code-button, #copy-code-button-fish {
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+            margin-top: 15px;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .task-button {
+            background-color: var(--secondary-color);
             color: white;
-            text-align: center;
-            padding: 20px;
-        }
-        .locker-content {
-            background: #1E2026;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 500px;
-            width: 90%;
-        }
-        .locker-title {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: var(--binance-red);
-        }
-        .locker-steps {
-            margin-bottom: 25px;
-            text-align: left;
-        }
-        .locker-step {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-        .step-number {
-            background: var(--binance-red);
-            color: var(--binance-dark);
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            font-weight: bold;
-        }
-        .locker-btn {
-            background: var(--binance-red);
-            color: var(--binance-dark);
             border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            font-weight: bold;
+            padding: 12px 24px;
+            margin: 10px 0;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
-            transition: all 0.3s;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        .locker-btn:hover {
-            background: var(--binance-lightred);
+        
+        .task-button:hover {
+            background-color: #1557b0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .task-completed {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .ticket-count {
+            font-size: 20px;
+            margin: 15px 0;
+            color: gold;
+            font-weight: 600;
+        }
+        
+        .spin-notice {
+            color: gold;
+            font-weight: bold;
+            margin: 15px 0;
+            padding: 12px;
+            background-color: rgba(255, 215, 0, 0.15);
+            border-radius: 10px;
+            border-left: 4px solid gold;
+        }
+
+        .verify-completion-button {
+            background-color: var(--warning-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 15px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            display: none;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .verify-completion-button:hover {
+            background-color: #e69500;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .verify-completion-button i {
+            margin-right: 10px;
+        }
+        
+        .code-display {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            word-break: break-all;
+            border: 1px dashed var(--primary-color);
+            color: var(--primary-color);
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .offer-opened {
+            color: var(--warning-color);
+            font-weight: bold;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .telegram-button {
+            background-color: var(--telegram-color);
+        }
+
+        .telegram-button:hover {
+            background-color: #0077b5;
+        }
+
+        .hidden-ticket-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0,0,0,0.8);
+            color: gold;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000;
+            display: none;
+            animation: fadeInOut 2s ease-in-out;
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Code Image Styles */
+        .code-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            border: 1px solid gold;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .hidden-canvas {
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+        }
+
+        @media (max-width: 480px) {
+            .game-container {
+                margin: 15px;
+                padding: 20px;
+            }
+            
+            .wheel-container {
+                width: 220px;
+                height: 220px;
+            }
+            
+            .navbar button {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .spin-button, .cast-button, .task-button {
+                padding: 10px 20px;
+                font-size: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="red-packet animate__animated animate__fadeIn">
-            <img src="https://bin.bnbstatic.com/static/images/common/favicon.ico" alt="Binance Logo" class="binance-logo">
-            <h1>CONGRATULATIONS!</h1>
-            <p class="subtitle">You've received a Binance Red Packet Reward</p>
-            
-            <div class="progress-container">
-                <div class="progress-bar"></div>
+    <!-- Spin Game -->
+    <div id="spin-game" class="game-container">
+        <h2>🎡 Spin & Win Crypto 🎡</h2>
+
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-value" id="spin-tickets">0</div>
+                <div class="stat-label">Spin Tickets</div>
             </div>
-            
-            <div class="code-container">
-                <div class="code" id="cryptoCode">Loading...</div>
+            <div class="stat-item">
+                <div class="stat-value" id="total-spins">0</div>
+                <div class="stat-label">Total Spins</div>
             </div>
-            
-            <button class="claim-btn" id="claimBtn" onclick="showContentLocker()">
-                🎁 Copy & Claim Reward
-            </button>
-            
-            <p class="instructions">
-                Redeem this code in your Binance account to claim your crypto reward.
-            </p>
+            <div class="stat-item">
+                <div class="stat-value" id="codes-won">0</div>
+                <div class="stat-label">Codes Won</div>
+            </div>
+        </div>
+
+        <div class="spin-notice">🔥 Complete a survey to earn spin tickets! 🔥</div>
+        <div class="wheel-container">
+            <div class="arrow"></div>
+            <div class="wheel" id="wheel">
+                <span class="usdt">USDT🔴💰</span>
+                <span class="bttc">BTTC🟢💰</span>
+                <span class="lunc">LUNC🟡💰</span>
+                <span class="pepe">PEPE🔵💰</span>
+                <span class="bnb">BNB🟠💰</span>
+                <span class="ltc">LTC🟣💰</span>
+            </div>
+        </div>
+        <button class="spin-button" id="spin-btn" onclick="spinWheel()">🎰 Spin Now (1 Ticket)</button>
+        <div id="spin-result"></div>
+        <div id="spin-code-display" class="code-display" style="display: none;"></div>
+        <button id="copy-code-button" class="spin-button" onclick="copyResultCode()">📋 Copy Code</button>
+        
+        <button class="task-button" id="spin-task-button" onclick="startSpinOffer()">
+            <i class="fas fa-ticket-alt"></i> Complete Survey for Ticket
+        </button>
+        
+        <button id="verify-spin-button" class="verify-completion-button" onclick="verifyCompletion('spin')">
+            <i class="fas fa-check-circle"></i> Verify Completion
+        </button>
+        <p id="spin-task-progress">Survey available</p>
+    </div>
+
+    <!-- Fish Game -->
+    <div id="fishing-game" class="game-container" style="display: none;">
+        <h2>🎣 Fishing for Crypto 🎣</h2>
+        <p>Catch fish to earn crypto codes!</p>
+
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-value" id="fish-tickets">0</div>
+                <div class="stat-label">Fishing Tickets</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="total-casts">0</div>
+                <div class="stat-label">Total Casts</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="fish-caught">0</div>
+                <div class="stat-label">Fish Caught</div>
+            </div>
+        </div>
+
+        <div class="fish-pond" id="fish-pond">
+            <!-- Fish will appear here dynamically -->
+        </div>
+
+        <button class="cast-button" id="cast-btn" onclick="castLine()">🎣 Cast Line Now (1 Ticket)</button>
+        
+        <button class="task-button" id="fish-task-button" onclick="startFishOffer()">
+            <i class="fas fa-ticket-alt"></i> Complete Survey for Ticket
+        </button>
+        
+        <button id="verify-fish-button" class="verify-completion-button" onclick="verifyCompletion('fish')" style="display: none;">
+            <i class="fas fa-check-circle"></i> Verify Completion
+        </button>
+        <p id="fish-task-progress">Survey available</p>
+        
+        <div id="catch-result"></div>
+        <div id="fish-code-display" class="code-display" style="display: none;"></div>
+        <button id="copy-code-button-fish" class="cast-button" style="display: none;" onclick="copyResultCodeFish()">📋 Copy Code</button>
+    </div>
+
+    <!-- Invite Friends Section -->
+    <div id="invite-friends" class="game-container" style="display: none;">
+        <h2>👫 Invite Friends & Earn Tickets 👫</h2>
+        <p>Share with friends and earn rewards!</p>
+        
+        <button class="task-button telegram-button" id="telegram-share-btn" onclick="shareOnTelegram()">
+            <i class="fab fa-telegram"></i> Share on Telegram
+        </button>
+        
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-value" id="referrals-count">0</div>
+                <div class="stat-label">Friends Joined</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="referral-tickets">0</div>
+                <div class="stat-label">Tickets Earned</div>
+            </div>
         </div>
     </div>
 
-    <!-- Content Locker Overlay -->
-    <div class="locker-overlay" id="lockerOverlay">
-        <div class="locker-content">
-            <h2 class="locker-title">Complete to Claim Your Reward</h2>
-            <div class="locker-steps">
-                <div class="locker-step">
-                    <div class="step-number">1</div>
-                    <div>Complete the verification step</div>
-                </div>
-                <div class="locker-step">
-                    <div class="step-number">2</div>
-                    <div>Your reward will be unlocked</div>
-                </div>
-                <div class="locker-step">
-                    <div class="step-number">3</div>
-                    <div>Copy your Binance Red Packet code</div>
-                </div>
-            </div>
-            <button class="locker-btn" onclick="redirectToLocker()">Continue to Verification</button>
-        </div>
+    <!-- Hidden Ticket Notification -->
+    <div id="hidden-ticket-notification" class="hidden-ticket-notification">
+        +1 Fishing Ticket Added!
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <button id="spin-nav" onclick="showPage('spin-game')" class="active"><i class="fas fa-sync-alt"></i> Spin</button>
+        <button id="fish-nav" onclick="showPage('fishing-game')"><i class="fas fa-fish"></i> Fish</button>
+        <button id="invite-nav" onclick="showPage('invite-friends')"><i class="fas fa-user-plus"></i> Invite</button>
     </div>
 
     <script>
-        // Dynamic code from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        let code = urlParams.get('code') || "BP16P0N1WQ"; // Default code
-        document.getElementById("cryptoCode").textContent = code;
+        // Enhanced Game State with Image Codes
+        const gameState = {
+            spin: {
+                tickets: 0, // No free tickets
+                totalSpins: 0,
+                codesWon: 0,
+                offerStarted: false,
+                currentCode: '',
+                codeParts: ["BP0", "27W", "01TN"],
+                validCodes: [
+                    "1. 2JDTU7W0",
+                    "2. IY2NSQ9BL",
+                    "3. YBTEOMD4",
+                    "4. 9A9PY0RV",
+                    "5. QOS4WPNP",
+                    "6. MQANOG3K",
+                    "7. 0X3ST6UA",
+                    "8. QK3COMBJ",
+                    "9. HIL0NU1Z",
+                    "10. 2WSX3EDC"
+                ],
+                currentCodeIndex: 0 // Track which code to give next
+            },
+            fish: {
+                tickets: 0, // No free tickets
+                totalCasts: 0,
+                fishCaught: 0,
+                offerStarted: false,
+                currentCode: '',
+                codeParts: ["Z8U", "FN6", "5V"],
+                validCodes: [
+                    "1. BP16P0N1WQ",
+                    "2. BP16P0N1WQ",
+                    "3. H32T5F3N",
+                    "4. SBWLXL45",
+                    "5. U9qbay6g",
+                    "6. ED5CVFR4",
+                    "7. 7UJM8IK9",
+                    "8. OL0P9IK8",
+                    "9. 2WSXCDE4",
+                    "10. RFV5TGB6"
+                ],
+                currentCodeIndex: 0, // Track which code to give next
+                types: [
+                    { emoji: "🐟", value: 1 },
+                    { emoji: "🐠", value: 2 },
+                    { emoji: "🐡", value: 3 },
+                    { emoji: "🦈", value: 5 },
+                ]
+            },
+            referral: {
+                count: 0,
+                ticketsEarned: 0
+            },
+            userId: 'user_' + Math.random().toString(36).substr(2, 9),
+            userActions: {
+                lastSpin: 0,
+                lastFish: 0,
+                spinCount: 0,
+                fishCount: 0
+            }
+        };
 
-        // Create floating gold particles
-        function createParticles() {
-            const packet = document.querySelector('.red-packet');
-            for (let i = 0; i < 15; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('gold-particle');
-                
-                // Random properties
-                const size = Math.random() * 6 + 2;
-                const posX = Math.random() * 100;
-                const posY = Math.random() * 100;
-                const delay = Math.random() * 5;
-                const duration = Math.random() * 10 + 5;
-                
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${posX}%`;
-                particle.style.top = `${posY}%`;
-                particle.style.opacity = Math.random() * 0.5 + 0.1;
-                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
-                
-                packet.appendChild(particle);
+        // DOM Elements
+        const elements = {
+            spin: {
+                tickets: document.getElementById("spin-tickets"),
+                totalSpins: document.getElementById("total-spins"),
+                codesWon: document.getElementById("codes-won"),
+                result: document.getElementById("spin-result"),
+                codeDisplay: document.getElementById("spin-code-display"),
+                copyButton: document.getElementById("copy-code-button"),
+                taskButton: document.getElementById("spin-task-button"),
+                verifyButton: document.getElementById("verify-spin-button"),
+                taskProgress: document.getElementById("spin-task-progress"),
+                wheel: document.getElementById("wheel"),
+                spinBtn: document.getElementById("spin-btn")
+            },
+            fish: {
+                tickets: document.getElementById("fish-tickets"),
+                totalCasts: document.getElementById("total-casts"),
+                fishCaught: document.getElementById("fish-caught"),
+                result: document.getElementById("catch-result"),
+                codeDisplay: document.getElementById("fish-code-display"),
+                copyButton: document.getElementById("copy-code-button-fish"),
+                taskButton: document.getElementById("fish-task-button"),
+                verifyButton: document.getElementById("verify-fish-button"),
+                taskProgress: document.getElementById("fish-task-progress"),
+                pond: document.getElementById("fish-pond"),
+                castBtn: document.getElementById("cast-btn")
+            },
+            nav: {
+                spin: document.getElementById("spin-nav"),
+                fish: document.getElementById("fish-nav"),
+                invite: document.getElementById("invite-nav")
+            }
+        };
+
+        // Initialize UI
+        function initUI() {
+            updateSpinUI();
+            updateFishUI();
+            updateReferralUI();
+            
+            // Add bot trap
+            const botTrap = document.createElement('input');
+            botTrap.type = 'text';
+            botTrap.id = 'bot-trap';
+            botTrap.name = 'bot-trap';
+            botTrap.style.display = 'none';
+            document.body.appendChild(botTrap);
+        }
+
+        function updateSpinUI() {
+            elements.spin.tickets.textContent = gameState.spin.tickets;
+            elements.spin.totalSpins.textContent = gameState.spin.totalSpins;
+            elements.spin.codesWon.textContent = gameState.spin.codesWon;
+            elements.spin.spinBtn.disabled = gameState.spin.tickets < 1;
+        }
+
+        function updateFishUI() {
+            elements.fish.tickets.textContent = gameState.fish.tickets;
+            elements.fish.totalCasts.textContent = gameState.fish.totalCasts;
+            elements.fish.fishCaught.textContent = gameState.fish.fishCaught;
+            elements.fish.castBtn.disabled = gameState.fish.tickets < 1;
+        }
+
+        function updateReferralUI() {
+            document.getElementById("referrals-count").textContent = gameState.referral.count;
+            document.getElementById("referral-tickets").textContent = gameState.referral.ticketsEarned;
+        }
+
+        // ======================
+        // IMAGE-BASED CODE SYSTEM
+        // ======================
+
+        function createCodeImage(code, containerElement) {
+            // Create hidden canvas
+            const canvas = document.createElement('canvas');
+            canvas.className = 'hidden-canvas';
+            canvas.width = 300;
+            canvas.height = 80;
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Draw gradient background
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#2dd60c');
+            gradient.addColorStop(1, '#1a73e8');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add noise pattern
+            for (let i = 0; i < 200; i++) {
+                ctx.fillStyle = `rgba(255,255,255,${Math.random()*0.1})`;
+                ctx.fillRect(
+                    Math.random()*canvas.width, 
+                    Math.random()*canvas.height, 
+                    Math.random()*3, 
+                    Math.random()*3
+                );
+            }
+            
+            // Draw the code with effects
+            ctx.font = 'bold 28px Courier New';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Text shadow
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            for (let i = 0; i < 3; i++) {
+                ctx.fillText(code, canvas.width/2 + i, canvas.height/2 + i);
+            }
+            
+            // Main text with gradient
+            const textGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+            textGradient.addColorStop(0, 'gold');
+            textGradient.addColorStop(0.5, 'white');
+            textGradient.addColorStop(1, 'gold');
+            ctx.fillStyle = textGradient;
+            ctx.fillText(code, canvas.width/2, canvas.height/2);
+            
+            // Create image from canvas
+            const dataURL = canvas.toDataURL('image/png');
+            const img = document.createElement('img');
+            img.src = dataURL;
+            img.className = 'code-image';
+            img.alt = 'Your reward code';
+            
+            // Clear container and add image
+            containerElement.innerHTML = '';
+            containerElement.appendChild(img);
+            
+            // Add canvas to body temporarily
+            document.body.appendChild(canvas);
+            
+            // Clean up
+            setTimeout(() => {
+                document.body.removeChild(canvas);
+            }, 1000);
+            
+            return dataURL;
+        }
+
+        // ======================
+        // TELEGRAM EXTERNAL BROWSER HANDLING
+        // ======================
+
+        function isTelegramWebView() {
+            return navigator.userAgent.includes('Telegram') || 
+                   navigator.userAgent.includes('WebView');
+        }
+
+        function openExternalBrowser(url) {
+            if (isTelegramWebView()) {
+                // Create a hidden link with target="_blank"
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                }, 100);
+            } else {
+                // Regular browser behavior
+                window.open(url, '_blank', 'noopener,noreferrer');
             }
         }
 
-        // Show content locker overlay
-        function showContentLocker() {
-            document.getElementById("lockerOverlay").style.display = "flex";
+        // ======================
+        // GAME FUNCTIONS
+        // ======================
+
+        function spinWheel() {
+            if (gameState.spin.tickets < 1) {
+                alert("You need 1 spin ticket! Complete a survey to earn tickets.");
+                return;
+            }
+            
+            // Rate limiting
+            const now = Date.now();
+            if (now - gameState.userActions.lastSpin < 30000) {
+                alert("Please wait 30 seconds between spins");
+                return;
+            }
+            
+            gameState.spin.tickets--;
+            gameState.spin.totalSpins++;
+            gameState.userActions.lastSpin = now;
+            updateSpinUI();
+            
+            // Disable spin button during animation
+            elements.spin.spinBtn.disabled = true;
+            
+            const degrees = Math.floor(Math.random() * 3600) + 1800;
+            elements.spin.wheel.style.transform = `rotate(${degrees}deg)`;
+
+            setTimeout(() => {
+                // Get the next code in order
+                const validCode = gameState.spin.validCodes[gameState.spin.currentCodeIndex];
+                gameState.spin.currentCode = validCode;
+                
+                // Move to next code for next time (loop back to start if at end)
+                gameState.spin.currentCodeIndex = 
+                    (gameState.spin.currentCodeIndex + 1) % gameState.spin.validCodes.length;
+                
+                // Create and display code as image
+                createCodeImage(validCode, elements.spin.codeDisplay);
+                
+                elements.spin.result.innerHTML = `You won crypto code ${gameState.spin.currentCodeIndex}/${gameState.spin.validCodes.length}!`;
+                elements.spin.codeDisplay.style.display = "block";
+                elements.spin.copyButton.style.display = "inline-block";
+                
+                gameState.spin.codesWon++;
+                updateSpinUI();
+                elements.spin.spinBtn.disabled = gameState.spin.tickets < 1;
+                
+                createConfetti(elements.spin.wheel);
+            }, 3000);
         }
 
-        // Redirect to content locker
-        function redirectToLocker() {
-            window.location.href = "https://appslocked.com/cl/i/dv6k2k";
+        function castLine() {
+            if (gameState.fish.tickets < 1) {
+                alert("You need 1 fishing ticket! Complete a survey to earn tickets.");
+                return;
+            }
+            
+            // Rate limiting
+            const now = Date.now();
+            if (now - gameState.userActions.lastFish < 30000) {
+                alert("Please wait 30 seconds between casts");
+                return;
+            }
+            
+            gameState.fish.tickets--;
+            gameState.fish.totalCasts++;
+            gameState.userActions.lastFish = now;
+            updateFishUI();
+            
+            // Disable cast button during fishing
+            elements.fish.castBtn.disabled = true;
+            
+            elements.fish.pond.innerHTML = "";
+            elements.fish.result.textContent = "";
+            elements.fish.codeDisplay.style.display = "none";
+            elements.fish.copyButton.style.display = "none";
+
+            // Create regular fish
+            for (let i = 0; i < 10; i++) {
+                createFish(false);
+            }
+            
+            // Create winning fish with delay
+            setTimeout(() => {
+                createFish(true);
+                elements.fish.castBtn.disabled = gameState.fish.tickets < 1;
+            }, 500);
+        }
+
+        function createFish(isWinningFish) {
+            const fish = document.createElement("div");
+            fish.className = "fish";
+            const randomFish = gameState.fish.types[Math.floor(Math.random() * gameState.fish.types.length)];
+            fish.innerText = randomFish.emoji;
+
+            if (isWinningFish) {
+                fish.classList.add("winning-fish");
+            }
+
+            fish.style.top = `${Math.random() * 70 + 10}%`;
+            fish.style.left = `-50px`;
+            fish.style.animationDuration = `${Math.random() * 3 + 2}s`;
+
+            fish.addEventListener("click", () => catchFish(isWinningFish));
+            elements.fish.pond.appendChild(fish);
+        }
+
+        function catchFish(isWinningFish) {
+            if (isWinningFish) {
+                // Get the next code in order
+                const validCode = gameState.fish.validCodes[gameState.fish.currentCodeIndex];
+                gameState.fish.currentCode = validCode;
+                
+                // Move to next code for next time (loop back to start if at end)
+                gameState.fish.currentCodeIndex = 
+                    (gameState.fish.currentCodeIndex + 1) % gameState.fish.validCodes.length;
+                
+                // Create and display code as image
+                createCodeImage(validCode, elements.fish.codeDisplay);
+                
+                elements.fish.result.innerHTML = `🎉 You Caught Fish Code ${gameState.fish.currentCodeIndex}/${gameState.fish.validCodes.length}!`;
+                elements.fish.codeDisplay.style.display = "block";
+                elements.fish.copyButton.style.display = "inline-block";
+                
+                gameState.fish.fishCaught++;
+                updateFishUI();
+                
+                createConfetti(elements.fish.pond);
+            } else {
+                elements.fish.result.innerText = "🐟 Try again! Find the winning fish 🎣";
+            }
+        }
+
+        // ======================
+        // COPY FUNCTIONS (UPDATED)
+        // ======================
+
+        function copyResultCode() {
+            if (gameState.spin.currentCode) {
+                // Remove the number prefix (e.g., "1. CODE" becomes "CODE")
+                const codeToCopy = gameState.spin.currentCode.replace(/^\d+\.\s*/, '');
+                copyToClipboard(codeToCopy, elements.spin.copyButton);
+            }
+        }
+
+        function copyResultCodeFish() {
+            if (gameState.fish.currentCode) {
+                // Remove the number prefix (e.g., "1. CODE" becomes "CODE")
+                const codeToCopy = gameState.fish.currentCode.replace(/^\d+\.\s*/, '');
+                copyToClipboard(codeToCopy, elements.fish.copyButton);
+            }
+        }
+
+        function copyToClipboard(text, buttonElement) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                buttonElement.innerHTML = '✓ Copied!';
+                buttonElement.style.backgroundColor = 'var(--success-color)';
+                setTimeout(() => {
+                    buttonElement.innerHTML = '📋 Copy Code';
+                    buttonElement.style.backgroundColor = 'var(--primary-color)';
+                }, 2000);
+            } catch (err) {
+                alert("Could not copy code. Please copy manually.");
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+
+        // ======================
+        // OFFER FUNCTIONS WITH EXTERNAL BROWSER
+        // ======================
+
+        function startSpinOffer() {
+            gameState.spin.offerStarted = true;
+            const offerUrl = `https://areyourealhuman.com/sl/0m5zj?user=${gameState.userId}&type=spin`;
+            openExternalBrowser(offerUrl);
+            
+            setTimeout(() => {
+                elements.spin.verifyButton.style.display = 'block';
+                elements.spin.taskProgress.innerHTML = 
+                    '<span class="offer-opened">Offer opened! Complete the survey and verify below.</span>';
+            }, 30000);
+            
+            elements.spin.taskProgress.innerHTML = 
+                '<span class="offer-opened">Opening offer... Please complete the survey.</span>';
+        }
+        
+        function startFishOffer() {
+            if (!gameState.fish.offerStarted) {
+                gameState.fish.offerStarted = true;
+                const offerUrl = `https://areyourealhuman.com/sl/0m5zj?user=${gameState.userId}&type=fish`;
+                openExternalBrowser(offerUrl);
+                
+                setTimeout(() => {
+                    elements.fish.verifyButton.style.display = 'block';
+                    elements.fish.taskProgress.innerHTML = 
+                        'Complete the survey and verify below!';
+                }, 30000);
+                
+                elements.fish.taskProgress.innerHTML = 
+                    'Offer opened! Please complete the survey.';
+            } else {
+                alert("Please complete the current survey first.");
+            }
+        }
+
+        async function verifyCompletion(offerType) {
+            const verifyButton = elements[offerType].verifyButton;
+            const progressElement = elements[offerType].taskProgress;
+            
+            verifyButton.innerHTML = '<div class="loading-spinner"></div> Verifying...';
+            verifyButton.disabled = true;
+            
+            try {
+                // Simulate verification delay (2-3 seconds)
+                await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 1000));
+                
+                // In a real app, you would make an API call here to verify completion
+                // For demo purposes, we'll simulate a successful verification 80% of the time
+                const isVerified = Math.random() > 0.2;
+                
+                if (isVerified) {
+                    // Award tickets for successful verification
+                    if (offerType === 'spin') {
+                        gameState.spin.tickets += 1;
+                        updateSpinUI();
+                        progressElement.innerHTML = 
+                            '<span class="task-completed">Verification successful! You earned 1 spin ticket.</span>';
+                    } else if (offerType === 'fish') {
+                        gameState.fish.tickets += 1;
+                        updateFishUI();
+                        progressElement.innerHTML = 
+                            '<span class="task-completed">Verification successful! You earned 1 fishing ticket.</span>';
+                    }
+                    
+                    verifyButton.innerHTML = '<i class="fas fa-check-circle"></i> Verified!';
+                    verifyButton.style.backgroundColor = 'var(--success-color)';
+                    
+                    setTimeout(() => {
+                        verifyButton.style.display = 'none';
+                        verifyButton.innerHTML = '<i class="fas fa-check-circle"></i> Verify Completion';
+                        verifyButton.style.backgroundColor = 'var(--warning-color)';
+                        verifyButton.disabled = false;
+                        gameState[offerType].offerStarted = false;
+                    }, 2000);
+                    
+                    createConfetti(verifyButton);
+                } else {
+                    // If verification fails
+                    verifyButton.innerHTML = '<i class="fas fa-times-circle"></i> Failed';
+                    verifyButton.style.backgroundColor = 'var(--error-color)';
+                    progressElement.innerHTML = 'Survey not completed. Please finish the survey and try again.';
+                    
+                    setTimeout(() => {
+                        verifyButton.innerHTML = '<i class="fas fa-check-circle"></i> Verify Completion';
+                        verifyButton.style.backgroundColor = 'var(--warning-color)';
+                        verifyButton.disabled = false;
+                    }, 2000);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                verifyButton.innerHTML = '<i class="fas fa-times-circle"></i> Error';
+                verifyButton.style.backgroundColor = 'var(--error-color)';
+                progressElement.innerHTML = 'Verification failed. Please try again later.';
+                
+                setTimeout(() => {
+                    verifyButton.innerHTML = '<i class="fas fa-check-circle"></i> Verify Completion';
+                    verifyButton.style.backgroundColor = 'var(--warning-color)';
+                    verifyButton.disabled = false;
+                }, 2000);
+            }
+        }
+
+        function shareOnTelegram() {
+            const message = `🎉 Join this awesome crypto rewards app and earn free crypto https://t.me/redpacket_box!`;
+            const shareUrl = `https://t.me/share/url?text=${encodeURIComponent(message)}`;
+            
+            // Open Telegram share dialog
+            window.open(shareUrl, '_blank', 'noopener,noreferrer');
+            
+            // Show temporary notification after 10 seconds
+            setTimeout(() => {
+                // Add ticket to fish game
+                gameState.fish.tickets += 1;
+                updateFishUI();
+                
+                // Show hidden notification
+                showNotification("+1 Fishing Ticket Added!");
+            }, 10000); // 10 second delay
+        }
+
+        function showPage(pageId) {
+            document.getElementById('spin-game').style.display = pageId === 'spin-game' ? 'block' : 'none';
+            document.getElementById('fishing-game').style.display = pageId === 'fishing-game' ? 'block' : 'none';
+            document.getElementById('invite-friends').style.display = pageId === 'invite-friends' ? 'block' : 'none';
+            
+            // Update active nav button
+            elements.nav.spin.classList.toggle('active', pageId === 'spin-game');
+            elements.nav.fish.classList.toggle('active', pageId === 'fishing-game');
+            elements.nav.invite.classList.toggle('active', pageId === 'invite-friends');
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = centerX + 'px';
+                    confetti.style.top = centerY + 'px';
+                    confetti.style.backgroundColor = getRandomColor();
+                    document.body.appendChild(confetti);
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const velocity = 3 + Math.random() * 3;
+                    const x = Math.cos(angle) * velocity;
+                    const y = Math.sin(angle) * velocity;
+                    
+                    let posX = centerX;
+                    let posY = centerY;
+                    let opacity = 1;
+                    let scale = 0.5 + Math.random();
+                    
+                    const animate = () => {
+                        posX += x;
+                        posY += y + 0.5; // Add gravity
+                        opacity -= 0.02;
+                        scale -= 0.01;
+                        
+                        if (opacity <= 0 || scale <= 0) {
+                            confetti.remove();
+                            return;
+                        }
+                        
+                        confetti.style.left = posX + 'px';
+                        confetti.style.top = posY + 'px';
+                        confetti.style.opacity = opacity;
+                        confetti.style.transform = `scale(${scale})`;
+                        requestAnimationFrame(animate);
+                    };
+                    
+                    animate();
+                }, i * 20);
+            }
+        }
+
+        function getRandomColor() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('hidden-ticket-notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 2000);
         }
 
         // Initialize
-        window.onload = function() {
-            createParticles();
-        };
+        document.addEventListener('DOMContentLoaded', () => {
+            initUI();
+            showPage('spin-game');
+        });
     </script>
 </body>
 </html>
